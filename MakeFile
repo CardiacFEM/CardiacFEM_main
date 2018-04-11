@@ -1,38 +1,35 @@
 # MakeFile for CardiacFEM
+# Defining variables
+objects = precision.o global_variables.o mp_interface.o input.o output.o gather_scatter.o maths.o timing.o large_strain.o cardiacfem.o
+f90comp = mpif90
+flag = -O3
+#Executable
+CardiacFEM: $(objects)
+    $(f90comp) -o CardiacFEM $(flag) $(objects)
+# Objects
 precision.o: precision.f90
-    mpif90 -c precision.f90
-    
+    $(f90comp) -c $(flag) precision.f90
 global_variables.o: global_variables.f90
-    mpif90 -c global_variables.f90
-    
+    $(f90comp) -c $(flag) global_variables.f90
 mp_interface.o: precision.o global_variables.o mp_interface.f90
-    mpif90 -c mp_interface.f90
-    
+    $(f90comp) -c $(flag) mp_interface.f90
 input.o: precision.o mp_interface.o input.f90
-    mpif90 -c input.f90
-    
+    $(f90comp) -c $(flag) input.f90
 output.o: precision.o mp_interface.o output.f90
-    mpif90 -c output.f90
-    
+    $(f90comp) -c $(flag) output.f90
 loading.o: precision.o gather_scatter.o loading.f90
-    mpif90 -c loading.f90
-    
+    $(f90comp) -c $(flag) loading.f90
 maths.o: precision.o mp_interface.o maths.f90
-    mpif90 -c maths.f90
-    
+    $(f90comp) -c $(flag) maths.f90
 gather_scatter.o: precision.o mp_interface.o global_variables.o input.o gather_scatter.f90
-    mpif90 -c gather_scatter.f90
-    
+    $(f90comp) -c $(flag) gather_scatter.f90
 new_library.o: precision.o new_library.f90
-    mpif90 -c new_library.f90
-    
+    $(f90comp) -c $(flag) new_library.f90
 large_strain.o: precision.o mp_interface.o gather_scatter.o loading.o maths.o new_library.o
-    mpif90 -c large_strain.f90
-
+    $(f90comp) -c $(flag) large_strain.f90
 timing.o: precision.o timing.f90
-    mpif90 -c precision.f90
-    
-CardiacFEM: precision.o global_variables.o mp_interface.o input.o output.o gather_scatter.o maths.o timing.o large_strain.o cardiacfem.f90
-    
+    $(f90comp) -c $(flag) precision.f90
+cardiacfem.o: precision.o global_variables.o mp_interface.o input.o output.o gather_scatter.o maths.o timing.o large_strain.o cardiacfem.f90
+    $(f90comp) -c $(flag) cardiacfem.f90    
     
 
