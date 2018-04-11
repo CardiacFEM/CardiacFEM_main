@@ -27,5 +27,12 @@ new_library.o: precision.o new_library.f90
     mpif90 -c new_library.f90
     
 large_strain.o: precision.o mp_interface.o gather_scatter.o loading.o maths.o new_library.o
+    mpif90 -c large_strain.f90
+
+timing.o: precision.o timing.f90
+    mpif90 -c precision.f90
+    
+CardiacFEM: precision.o global_variables.o mp_interface.o input.o output.o gather_scatter.o maths.o timing.o large_strain.o cardiacfem.f90
+    
     
 
