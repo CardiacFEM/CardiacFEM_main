@@ -11,6 +11,7 @@ MODULE INPUT
   !*    
   !*    Subroutine             Purpose
   !*
+  !*    READ_MESH_DATA         Reads the information about the mesh
   !*    READ_XX7               Reads the control data for program xx7
   !*    MESH_ENSI              Creates ASCII ensight gold files
   !*    MESH_ENSI_BIN          Creates BINARY ensight gold files *not tested*
@@ -32,6 +33,123 @@ MODULE INPUT
   USE mp_interface
 
   CONTAINS
+
+!------------------------------------------------------------------------------
+!------------------------------------------------------------------------------
+!------------------------------------------------------------------------------
+
+    SUBROUTINE READ_MESH_DATA(fname,numpe,nels,nn,nr,loaded_nodes,fixed_nodes,&
+     nod,nip)
+
+    !/****f* input_output/read_mesh_data
+    !*  NAME
+    !*    SUBROUTINE: read_mesh_data
+    !*  SYNOPSIS
+    !*    Usage:      CALL read_mesh_data(fname,numpe,nels,nn,nr,loaded_nodes,&
+    !*                                fixed_nodes,nod,nip)
+    !*  FUNCTION
+    !*    Master process reads the general data of the mesh of the problem
+    !*    Master process broadcasts to slave processes.
+    !*  INPUTS
+    !*    The following arguments have the INTENT(IN) attribute:
+    !*
+    !*    fname                  : Character
+    !*                           : File name to read
+    !*
+    !*    numpe                  : Integer
+    !*                           : Process number
+    !*
+    !*    The following arguments have the INTENT(OUT) attribute:
+    !*
+    !*    nels                   : Integer
+    !*                           : Total number of elements
+    !*
+    !*    nn                     : Integer
+    !*                           : Total number of nodes 
+    !*
+    !*    nr                     : Integer
+    !*                           : Number of nodes with restrained degrees of
+    !*                             freedom 
+    !*
+    !*    loaded_nodes           : Integer
+    !*                           : Number of nodes with applied forces
+    !*
+    !*    fixed_nodes            : Integer
+    !*                           : Number of restrained degrees of freedom 
+    !*                             with a non-zero applied value
+    !*
+    !*    nod                    : Integer
+    !*                           : Number of nodes per element
+    !*
+    !*    nip                    : Integer
+    !*                           : Number of Gauss integration points
+    !*
+    !*  AUTHOR
+    !*    Francesc Levrero-Florencio
+    !*    L. Margetts
+    !*  CREATION DATE
+    !*    01.06.2007
+    !*  COPYRIGHT
+    !*    (c) University of Manchester 2007-2011
+    !******
+    !*  Place remarks that should not be included in the documentation here.
+    !*
+    !*/
+  
+      IMPLICIT NONE
+
+      CHARACTER(*), INTENT(IN)  :: fname
+      INTEGER,      INTENT(IN)  :: numpe
+      INTEGER,      INTENT(OUT) :: nels, nn, nr, nod, nip,
+      INTEGER                   :: bufsize, ier, vec_integer(10)
+
+    !----------------------------------------------------------------------
+    ! 1. Master process reads the data and builds the integer and real
+    !    vectors with the data
+    !----------------------------------------------------------------------
+
+      IF (numpe==1) THEN
+        OPEN(10,FILE=fname,STATUS='OLD',ACTION='READ')
+        READ(10,*)nels,nn,nr,loaded_nodes,fixed_nodes,nip
+        READ(10,*)limit,tol,e,v
+        READ(10,*)nod
+        READ(10,*)num_load_steps,jump
+        READ(10,*)tol2
+        CLOSE(10)
+      
+        vec_integer(1) = nels
+        vec_integer(2) = nn
+        vec_integer(3) = nr
+        vec_integer(4) = loaded_nodes
+        vec_integer(5) = fixed_nodes
+        vec_integer(6) = nod
+        vec_integer(7) = nip
+      END IF
+
+    !----------------------------------------------------------------------
+    ! 2. Master process broadcasts the data to slave processes
+    !----------------------------------------------------------------------
+
+      bufsize = 7
+      CALL MPI_BCAST(vec_integer,bufsize,MPI_INTEGER,0,MPI_COMM_WORLD,ier)
+
+    !----------------------------------------------------------------------
+    ! 3. Slave processes extract the variables back from the vectors
+    !----------------------------------------------------------------------
+
+      IF (numpe /= 1) THEN
+        nels         = vec_integer(1)
+        nn           = vec_integer(2)
+        nr           = vec_integer(3)
+        loaded_nodes = vec_integer(4)
+        fixed_nodes  = vec_integer(5)
+        nod          = vec_integer(6)
+        nip          = vec_integer(7)
+      END IF
+
+      RETURN
+
+    END SUBROUTINE READ_MESH_DATA
 
 !------------------------------------------------------------------------------
 !------------------------------------------------------------------------------
