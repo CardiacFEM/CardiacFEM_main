@@ -16,8 +16,6 @@ MODULE global_variables
   !*  Place remarks that should not be included in the documentation here.
   !*
   !*/
-  
-  USE precision
 
   IMPLICIT NONE
 
