@@ -10,3 +10,6 @@ global_variables: global_variables.f90
     
 mp_interface.o: precision.o global_variables.o mp_interface.f90
     mpif90 -c mp_interface.f90
+    
+input.o: precision.o mp_interface.o input.f90
+    mpif90 -c input.f90
