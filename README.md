@@ -1,2 +1,2 @@
 # CardiacFEM_main
-This is the master branch for CardiacFEM
+This is the master branch for CardiacFEM.
