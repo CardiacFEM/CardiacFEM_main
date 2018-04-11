@@ -20,12 +20,10 @@ MODULE global_variables
   IMPLICIT NONE
 
 ! The following may be used in the main program and gather_scatter
-
   INTEGER, PARAMETER   :: details = 6  ! Use standard output for details
   INTEGER              :: ntot, neq, nels_pp, neq_pp, numpe
 
 ! Variables for packing data to be broadcast. (utility and gather_scatter)
-
   INTEGER              :: position, bufsize, recbufsize, ier
   INTEGER, ALLOCATABLE :: tempbuf(:)
 
