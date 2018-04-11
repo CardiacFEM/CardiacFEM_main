@@ -13,3 +13,11 @@ input.o: precision.o mp_interface.o input.f90
     
 output.o: precision.o mp_interface.o output.f90
     mpif90 -c output.f90
+    
+maths.o: precision.o mp_interface.o maths.f90
+    mpif90 -c maths.f90
+    
+gather_scatter.o: precision.o mp_interface.o global_variables.o input.o gather_scatter.f90
+    mpif90 -c gather_scatter.f90
+    
+
