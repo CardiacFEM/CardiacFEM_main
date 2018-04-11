@@ -20,7 +20,8 @@ MODULE INPUT
   !*    MESH_ENSI_NDBND_BIN    Creates BINARY ensight NDBND files *not tested*
   !*    MESH_ENSI_NDLDS_BIN    Creates BINARY ensight LDS files *not tested*
   !*  AUTHOR
-  !*    L. Margetts and F. Levrero-Florencio
+  !*    F. Levrero-Florencio
+  !*    L. Margetts
   !*  COPYRIGHT
   !*    2004-2014 University of Manchester
   !******
@@ -85,7 +86,7 @@ MODULE INPUT
   !*                           : Number of Gauss integration points
   !*
   !*  AUTHOR
-  !*    Francesc Levrero-Florencio
+  !*    F. Levrero-Florencio
   !*    L. Margetts
   !*  CREATION DATE
   !*    01.06.2007
@@ -191,7 +192,7 @@ MODULE INPUT
   !*                           : Tolerance for Newton-Raphson loop
   !*
   !*  AUTHOR
-  !*    Francesc Levrero-Florencio
+  !*    F. Levrero-Florencio
   !*    L. Margetts
   !*  CREATION DATE
   !*    01.06.2007
